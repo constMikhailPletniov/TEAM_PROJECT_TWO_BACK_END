@@ -1,0 +1,30 @@
+{
+  "name": "team_project_two_back_end",
+  "version": "1.0.0",
+  "description": "this is a back end part of team project two",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/constMikhailPletniov/TEAM_PROJECT_TWO_BACK_END.git"
+  },
+  "keywords": [
+    "team",
+    "project",
+    "two",
+    "back",
+    "end"
+  ],
+  "author": "Mikhail, Andrew, Kyrylo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/constMikhailPletniov/TEAM_PROJECT_TWO_BACK_END/issues"
+  },
+  "homepage": "https://github.com/constMikhailPletniov/TEAM_PROJECT_TWO_BACK_END#readme",
+  "dependencies": {
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1"
+  }
+}
