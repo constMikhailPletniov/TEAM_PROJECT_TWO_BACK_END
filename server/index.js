@@ -1,4 +1,5 @@
 const http = require('http');
+const { routers } = require('./routers/routers');
 
 const { CONFIG, STATUS_CODE } = require('./configurations');
 require('dotenv').config();
@@ -27,7 +28,7 @@ http.createServer(async (req, res) => {
     req.on('end', async () => {
         const body = buffer.length ?
             JSON.parse(buffer) : JSON.stringify({ message: "body is empty" });
-        await router({ req, res, body });
+        await routers({ req, res, body });
     });
 
 }).listen(CONFIG.PORT, () => {

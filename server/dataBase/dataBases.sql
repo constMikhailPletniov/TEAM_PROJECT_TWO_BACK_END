@@ -1,7 +1,9 @@
 CREATE TABLE users(
 id SERIAL PRIMARY KEY NOT NULL,
-password VARCHAR(20) NOT NULL,
+password VARCHAR(140) NOT NULL,
 login VARCHAR(20) NOT NULL,
 first_name VARCHAR(20) NOT NULL,
-last_name VARCHAR(20) NOT NULL
+last_name VARCHAR(20) NOT NULL,
+FOREIGN KEY(movie_id) REFERENCES movies(id),
+FOREIGN KEY(rate_id) REFERENCES ratings(id)
 );

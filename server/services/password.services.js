@@ -10,6 +10,7 @@ const compare = async (password, hashPassword) => {
         if (!isMatched) {
             throw new Error('Invalid Data');
         }
+
     } catch (err) {
         console.error('compare: ', err);
     }

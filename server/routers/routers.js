@@ -1,23 +1,18 @@
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
-const { SIGN_UP_CONTROLLER } = require('../controllers');
-const { USER_VALIDATE } = require('../utils');
+const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER } = require('../controllers');
 
-const routers = async (req, res, body) => {
+
+const routers = async ({ req, res, body }) => {
     try {
-        const { pathname, query } = URL.parse(req.url, true);
+        const { pathname } = URL.parse(req.url, true);
 
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
-                const validate = USER_VALIDATE.userValidate.validateAsync(body);
-
-                if (!validate) {
-                    return res.end(JSON.stringify({ message: "Invalid data" }));
-                }
-                await SIGN_UP_CONTROLLER.postUserData(body);
+                ({ error, data } = await SIGN_UP_CONTROLLER.postUserData(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_IN}`):
-
+                ({ error, data } = await SIGN_IN_CONTROLLER.checkUserData(body));
                 break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
