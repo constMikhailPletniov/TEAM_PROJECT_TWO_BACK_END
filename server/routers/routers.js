@@ -13,6 +13,7 @@ const routers = async ({ req, res, body }) => {
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_IN}`):
                 ({ error, data } = await SIGN_IN_CONTROLLER.checkUserData(body));
+
                 break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
@@ -21,7 +22,7 @@ const routers = async ({ req, res, body }) => {
 
         if (error) {
             res.statusCode = STATUS_CODE.NOT_FOUND;
-            return res.end(JSON.stringify({ message: error.message }));
+            return res.end(JSON.stringify({ message: error }) || JSON.stringify({ message: error.message }));
         }
         res.statusCode = STATUS_CODE.OK;
         return res.end(JSON.stringify({ message: data }));

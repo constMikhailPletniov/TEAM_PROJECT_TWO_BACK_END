@@ -6,19 +6,17 @@ const { PASSWORD_SERVICES } = require('../services');
 
 const postUserData = async (body) => {
     try {
-        const { error } = USER_VALIDATE.userValidate.validateAsync(body);
-        if (error) {
-            console.log('work')
-            return { error: error };
-        }
+        await USER_VALIDATE.userValidate.validateAsync(body);
+
         const { password, login, first_name, last_name } = body;
         const hashPassword = await PASSWORD_SERVICES.hash(password);
         const data = await USERS_REPOSITORIES.postUserData({ hashPassword, login, first_name, last_name });
-        return { data: data };
-    } catch (err) {
-        console.error('postUserData: ', err);
+        return { data: data.command };
 
-        return { error: err };
+    } catch (err) {
+        console.error('postUserData_Sing_up: ', err);
+
+        return { error: err.details[0].message };
     }
 };
 
