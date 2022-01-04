@@ -13,7 +13,14 @@ const routers = async ({ req, res, body }) => {
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_IN}`):
                 ({ error, data } = await SIGN_IN_CONTROLLER.checkUserData(body));
-
+                break;
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
+                break;
+            case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
+                break;
+            case (req.method === METHODS.PUT && pathname === `${ENDPOINTS.MOVIES}`):
+                break;
+            case (req.method === METHODS.DELETE && pathname === `${ENDPOINTS.MOVIES}`):
                 break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
