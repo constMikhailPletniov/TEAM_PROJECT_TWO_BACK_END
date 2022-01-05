@@ -1,0 +1,21 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Documentetion for filmsApi",
+        "version": "1.0.0",
+        "description": "This documentation for films Api project DevEducation",
+        "contact": {
+            "email": "mihailpl1995@gmail.com"
+        },
+        "tags": {
+            "name": "filmsApi",
+            "description": "information about films Api"
+        }
+    },
+    "schemes": "http",
+    "path": {
+        "/users/sign_up": {
+            "post": {}
+        }
+    }
+}

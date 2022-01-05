@@ -2,6 +2,7 @@ const http = require('http');
 const { routers } = require('./routers/routers');
 
 const { CONFIG, STATUS_CODE } = require('./configurations');
+
 require('dotenv').config();
 require('./dataBase/dataBases');
 
@@ -30,6 +31,8 @@ http.createServer(async (req, res) => {
             JSON.parse(buffer) : JSON.stringify({ message: "body is empty" });
         await routers({ req, res, body });
     });
+
+
 
 }).listen(CONFIG.PORT, () => {
     console.log(`App listen port: ${CONFIG.PORT}`);

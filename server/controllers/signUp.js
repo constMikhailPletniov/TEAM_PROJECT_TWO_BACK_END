@@ -6,9 +6,8 @@ const { PASSWORD_SERVICES } = require('../services');
 
 const postUserData = async (body) => {
     try {
-        await USER_VALIDATE.userValidate.validateAsync(body);
-
-        const { password, login, first_name, last_name, user_role } = body;
+        const validate = await USER_VALIDATE.userValidate.validateAsync(body);
+        const { password, login, first_name, last_name, user_role } = validate;
         const hashPassword = await PASSWORD_SERVICES.hash(password);
         const data = await USERS_REPOSITORIES.postUserData({ hashPassword, login, first_name, last_name, user_role });
         return { data: data.command };
