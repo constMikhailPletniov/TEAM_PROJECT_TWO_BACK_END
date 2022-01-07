@@ -94,9 +94,22 @@ const getMovies = async () => {
     }
 };
 
+const getMovieById = async (movie_id) => {
+    try {
+        const movie = await client.query(`SELECT * FROM movies_genres INNER JOIN movies
+        ON movie_id = movies.id WHERE movies.id = ${movie_id};`);
+        if (!movie.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
+
+        return { data: formatResult(movie.rows) };
+    } catch (err) {
+        console.error('getMovies repo: ', err);
+        return { error: err };
+    }
+};
 
 module.exports = {
     getIdMovies,
     setMovies,
-    getMovies
+    getMovies,
+    getMovieById
 }

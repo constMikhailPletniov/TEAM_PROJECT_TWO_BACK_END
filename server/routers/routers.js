@@ -1,11 +1,13 @@
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
-const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES } = require('../controllers');
+const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLLERS } = require('../controllers');
 
 
 const routers = async ({ req, res, body }) => {
     try {
         const { pathname } = URL.parse(req.url, true);
+
+        const movie_id = pathname.split('/').at(-1);
 
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
@@ -18,10 +20,17 @@ const routers = async ({ req, res, body }) => {
                 ({ error, data } = await MOVIES.setMoviesControll(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.GENRES}${ENDPOINTS.SET}`):
-                ({ error, data } = await GENRES.getGenres(body));
+                ({ error, data } = await GENRES.setGenres(body));
+                break;
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.FILTERS}`):
+                ({ error, data } = await FILTERS_CONTROLLERS.getfilters());
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
                 ({ error, data } = await MOVIES.getMovies());
+                break;
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/${movie_id}`):
+
+                ({ error, data } = await MOVIES.getMovieById(movie_id));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
                 break;

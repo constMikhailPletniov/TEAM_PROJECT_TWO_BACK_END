@@ -5,5 +5,6 @@ module.exports = {
     SIGN_UP: '/sign_up',
     SIGN_IN: '/sign_in',
     SET: '/set',
-    GENRES: '/genres'
+    GENRES: '/genres',
+    FILTERS: '/filters'
 }

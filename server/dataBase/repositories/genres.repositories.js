@@ -1,4 +1,5 @@
 const client = require('../dataBases');
+const { STATUS_CODE } = require('../../configurations');
 
 const setGenres = async ({ id, name }) => {
     try {
@@ -13,6 +14,18 @@ const setGenres = async ({ id, name }) => {
     }
 };
 
+const getGenres = async () => {
+    try {
+        const data = await client.query(`SELECT * FROM genres;`);
+        if (!data.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
+        return { data: data.rows };
+    } catch (err) {
+        console.error(err)
+        return { error: err };
+    }
+};
+
 module.exports = {
-    setGenres
+    setGenres,
+    getGenres,
 }

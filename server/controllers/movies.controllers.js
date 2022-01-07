@@ -25,7 +25,20 @@ const getMovies = async () => {
     }
 };
 
+const getMovieById = async (movie_id) => {
+    try {
+        const { data } = await MOVIES_REPOSITORIES.getMovieById(movie_id);
+        if (!data[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
+
+        return { data: data };
+    } catch (err) {
+        console.error('getMovieById: ', err);
+        return { error: err };
+    }
+};
+
 module.exports = {
     setMoviesControll,
-    getMovies
+    getMovies,
+    getMovieById
 }
