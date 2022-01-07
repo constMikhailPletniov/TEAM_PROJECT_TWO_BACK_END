@@ -4,5 +4,6 @@ module.exports = {
     MOVIES: '/movies',
     SIGN_UP: '/sign_up',
     SIGN_IN: '/sign_in',
-    SET: '/set'
+    SET: '/set',
+    GENRES: '/genres'
 }

@@ -1,6 +1,6 @@
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
-const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES } = require('../controllers');
+const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES } = require('../controllers');
 
 
 const routers = async ({ req, res, body }) => {
@@ -15,10 +15,13 @@ const routers = async ({ req, res, body }) => {
                 ({ error, data } = await SIGN_IN_CONTROLLER.checkUserData(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}${ENDPOINTS.SET}`):
-                ({ error, data } = MOVIES.setMoviesControll(body));
+                ({ error, data } = await MOVIES.setMoviesControll(body));
+                break;
+            case (req.method === METHODS.POST && pathname === `${ENDPOINTS.GENRES}${ENDPOINTS.SET}`):
+                ({ error, data } = await GENRES.getGenres(body));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
-
+                ({ error, data } = await MOVIES.getMovies());
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
                 break;

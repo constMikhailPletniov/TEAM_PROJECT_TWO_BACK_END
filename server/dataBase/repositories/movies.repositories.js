@@ -1,17 +1,48 @@
 const axios = require('axios');
 const client = require('../dataBases');
+const { STATUS_CODE } = require('../../configurations');
 
 let count = 1;
 
-const setMovies = async ({ id }, genresItem) => {
+const getGenresId = async (movieId, genresArray) => {
+    try {
+        for (const item of genresArray) {
+            await setMoviesGenres(movieId, item);
+        }
+    } catch (err) {
+        console.error('getGenresId: ', err);
+        return { error: err };
+    }
+
+};
+
+const setMoviesGenres = async (movieId, { id: genresId }) => {
+    try {
+        await client.query(`INSERT INTO movies_genres(movie_id,genre_id) 
+        VALUES(${movieId},${genresId});`);
+    } catch (err) {
+        console.error('setMoviesGenres: ', err);
+        return { error: err };
+    }
+
+};
+
+const setMovies = async ({ id }) => {
     try {
 
-        const { data: { adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, overview, popularity, poster_path, release_date, revenue, runtime, genres } } = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=483f32e50b323d6e44691437daeb45e7`);
-        console.log(genres);
-        //  const result = await client.query(`INSERT INTO movies(adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, overview, popularity, poster_path, release_date, revenue, runtime)
-        //  VALUES(${adult},'${backdrop_path}',${budget},'${homepage}','${imdb_id}','${original_language}','${original_title}','${overview}',${popularity},'${poster_path}','${release_date}',${revenue},${runtime})`);
+        let { data: { adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, title, overview, popularity, poster_path, release_date, revenue, runtime, genres } } = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=483f32e50b323d6e44691437daeb45e7`);
 
-        //  return { data: result };
+        const idResult = await client.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
+        if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
+        original_title = original_title.replace(/'/gi, '\'\'');
+        title = title.replace(/'/gi, '\'\'');
+        overview = overview.replace(/'/gi, '\'\'');
+        const result = await client.query(`INSERT INTO movies(adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, title, overview, popularity, poster_path, release_date, revenue, runtime)
+        VALUES(${adult},'${backdrop_path}',${budget},'${homepage}','${imdb_id}','${original_language}','${original_title}', '${title}','${overview}',${popularity},'${poster_path}','${release_date}',${revenue},${runtime}) returning*;`);
+
+        await getGenresId(result.rows[0].id, genres);
+
+        return { data: "Films was inserted" };
     } catch (err) {
         console.error('setMovies: ', err);
         return { error: err };
@@ -26,8 +57,7 @@ const getIdMovies = async () => {
             await setMovies(item);
         }
         count++;
-
-        if (count > 12) {
+        if (count > 50) {
             return;
         }
         getIdMovies();
@@ -37,21 +67,36 @@ const getIdMovies = async () => {
     }
 };
 
-// const getGenres = async () => {
-//     try {
-//         const { genres } = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=483f32e50b323d6e44691437daeb45e7`);
+const formatResult = (allMovies) => {
+    return allMovies.reduce((acc, item) => {
+        const check = acc.find((movie) => movie.id === item.movie_id);
+        const genresArr = [];
+        if (!check) {
 
-//         for (const item of genres) {
-//             await setMovies(null, item);
-//         }
-//     } catch (err) {
-//         console.error('getGenres: ', err);
-//         return { error: err };
-//     }
+            acc.push({ genres: genresArr, ...item });
+        } else {
+            check.genres.push(item.genre_id);
+        }
+        return acc;
+    }, []);
+};
 
-// };
-// getGenres();
+const getMovies = async () => {
+    try {
+        const allMovies = await client.query(`SELECT * FROM movies_genres INNER JOIN movies
+        ON movie_id = movies.id;`);
+        if (!allMovies.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
+
+        return { data: formatResult(allMovies.rows) };
+    } catch (err) {
+        console.error('getMovies repo: ', err);
+        return { error: err };
+    }
+};
+
+
 module.exports = {
     getIdMovies,
-    setMovies
+    setMovies,
+    getMovies
 }

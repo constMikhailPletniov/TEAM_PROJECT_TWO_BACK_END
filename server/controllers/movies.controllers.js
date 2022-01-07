@@ -1,4 +1,4 @@
-
+const { STATUS_CODE } = require('../configurations');
 const { MOVIES_REPOSITORIES } = require('../dataBase/repositories');
 
 const setMoviesControll = async ({ user_role }) => {
@@ -13,6 +13,19 @@ const setMoviesControll = async ({ user_role }) => {
     }
 };
 
+const getMovies = async () => {
+    try {
+        const { data } = await MOVIES_REPOSITORIES.getMovies();
+        if (!data[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
+
+        return { data: data };
+    } catch (err) {
+        console.error('getMovies: ', err);
+        return { error: err };
+    }
+};
+
 module.exports = {
-    setMoviesControll
+    setMoviesControll,
+    getMovies
 }
