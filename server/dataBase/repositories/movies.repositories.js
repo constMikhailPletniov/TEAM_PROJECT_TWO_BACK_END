@@ -57,7 +57,7 @@ const getIdMovies = async () => {
             await setMovies(item);
         }
         count++;
-        if (count > 50) {
+        if (count > 20) {
             return;
         }
         getIdMovies();
