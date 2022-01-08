@@ -26,7 +26,8 @@ popularity INT,
 poster_path TEXT NOT NULL,
 release_date VARCHAR(255),
 revenue BIGINT,
-runtime INT NOT NULL
+runtime INT NOT NULL,
+tagline VARCHAR(255)
 );
 
 CREATE TABLE genres(

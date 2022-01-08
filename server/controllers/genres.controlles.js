@@ -9,7 +9,7 @@ const setGenres = async ({ user_role, api_key }) => {
         for (const item of genres) {
             await GENRES_REPOSITORIES.setGenres(item);
         }
-
+        return {data: 'genres was set'}
     } catch (err) {
         console.error('getGenres: ', err);
         return { error: err };

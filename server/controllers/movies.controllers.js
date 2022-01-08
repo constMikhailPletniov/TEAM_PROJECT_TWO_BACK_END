@@ -5,6 +5,7 @@ const setMoviesControll = async ({ user_role }) => {
     try {
         if (!user_role === 'admin') return { error: "Invalid admin" };
         const data = await MOVIES_REPOSITORIES.getIdMovies();
+        console.log(data);
         if (!data) return { error: "From api No data" };
         return { data: data };
     } catch (err) {
