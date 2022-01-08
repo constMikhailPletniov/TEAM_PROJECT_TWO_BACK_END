@@ -25,7 +25,21 @@ const getGenres = async () => {
     }
 };
 
+const getGenresById = async (movie_id) => {
+    try {
+        const data = await client.query(`SELECT genre_id FROM movies_genres WHERE movie_id = ${movie_id};`);
+        if (!data.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
+        const values = data.rows.map(e => Object.values(e));
+        const result = values.flat();
+        return { data: result };
+    } catch (err) {
+        console.error(err)
+        return { error: err };
+    }
+};
+
 module.exports = {
     setGenres,
     getGenres,
+    getGenresById
 }

@@ -1,4 +1,4 @@
-const client = require('../dataBase/dataBases');
+
 
 const { USER_VALIDATE } = require('../utils');
 const { USERS_REPOSITORIES } = require('../dataBase/repositories');

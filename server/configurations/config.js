@@ -11,6 +11,8 @@ module.exports = {
         SEVEN: 7,
         EIGHT: 8,
         NINE: 9,
-        TEN: 10
+        TEN: 10,
+        TWENTY_ONE: 21,
+        FOURTY_TWO: 42
     }
 }

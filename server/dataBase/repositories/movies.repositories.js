@@ -1,6 +1,7 @@
 const axios = require('axios');
 const client = require('../dataBases');
 const { STATUS_CODE } = require('../../configurations');
+const { REQUESTS_VALIDATE } = require('../../utils');
 
 let count = 1;
 
@@ -84,18 +85,33 @@ const formatResult = (allMovies) => {
     }, []);
 };
 
-const getMovies = async () => {
-    try {
-        const allMovies = await client.query(`SELECT * FROM movies_genres INNER JOIN movies
-        ON movie_id = movies.id;`);
-        if (!allMovies.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
 
-        return { data: formatResult(allMovies.rows) };
-    } catch (err) {
+
+const getMovies = async ({ adult, page, perPage, budget, title, languages,
+    budget_min, budget_max, release_date_first, release_date_last, }) => {
+    const options = [];
+    try {
+        const validate = await REQUESTS_VALIDATE.queryValidate.validateAsync({ page, perPage });
+        let pgQuery = `SELECT *  FROM movies `;
+        if (adult) options.push(`adult = ${adult}`);
+        if (budget) options.push(`budget > ${budget_min} AND budget < ${budget_max}`);
+        if (title) options.push(`title ILIKE '%${title}%'`);
+        if (languages) options.push(`original_language = '${languages}'`);
+        if (options.length !== 0) {
+            pgQuery += `WHERE ${options.join(' AND ')} `;
+            options.length = 0;
+        }
+        pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
+        console.log(pgQuery);
+        const movies = await client.query(pgQuery);
+        if (!movies.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
+        return movies.rows;
+    }
+    catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };
-    }
-};
+    };
+}
 
 const getMovieById = async (movie_id) => {
     try {
@@ -110,9 +126,20 @@ const getMovieById = async (movie_id) => {
     }
 };
 
+const getMoviesByGenresId = async (genre_id) => {
+    try {
+        const result = await client.query(`SELECT * FROM movies LEFT JOIN movies_genres ON movies_genres.movie_id = movies.id where genre_id = ${genre_id};`);
+        return { data: result.rows };
+    } catch (err) {
+        console.error('getMoviesByGenresId: ', err);
+        return { error: err };
+    }
+};
+
 module.exports = {
     getIdMovies,
     setMovies,
     getMovies,
-    getMovieById
+    getMovieById,
+    getMoviesByGenresId
 }

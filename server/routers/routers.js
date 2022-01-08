@@ -24,18 +24,20 @@ const routers = async ({ req, res, body }) => {
                 ({ error, data } = await FILTERS_CONTROLLERS.getfilters());
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
-                ({ error, data } = await MOVIES.getMovies());
+                ({ error, data } = await MOVIES.getMovies(query));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
-
                 ({ error, data } = await MOVIES.getMovieById(query.id));
                 break;
-            case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}${ENDPOINTS.GENRES}/${query.id}`):
+                ({ error, data } = await MOVIES.getMoviesByGenresId(query.id));
                 break;
-            case (req.method === METHODS.PUT && pathname === `${ENDPOINTS.MOVIES}`):
-                break;
-            case (req.method === METHODS.DELETE && pathname === `${ENDPOINTS.MOVIES}`):
-                break;
+            // case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
+            //     break;
+            // case (req.method === METHODS.PUT && pathname === `${ENDPOINTS.MOVIES}`):
+            //     break;
+            // case (req.method === METHODS.DELETE && pathname === `${ENDPOINTS.MOVIES}`):
+            //     break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
                 return res.end(JSON.stringify({ message: "Invalid request" }));
