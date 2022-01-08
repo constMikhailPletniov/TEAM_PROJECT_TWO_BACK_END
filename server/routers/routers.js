@@ -5,9 +5,7 @@ const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLL
 
 const routers = async ({ req, res, body }) => {
     try {
-        const { pathname } = URL.parse(req.url, true);
-
-        const movie_id = pathname.split('/').at(-1);
+        const { pathname, query } = URL.parse(req.url, true);
 
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
@@ -28,9 +26,9 @@ const routers = async ({ req, res, body }) => {
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
                 ({ error, data } = await MOVIES.getMovies());
                 break;
-            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/${movie_id}`):
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
 
-                ({ error, data } = await MOVIES.getMovieById(movie_id));
+                ({ error, data } = await MOVIES.getMovieById(query.id));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
                 break;

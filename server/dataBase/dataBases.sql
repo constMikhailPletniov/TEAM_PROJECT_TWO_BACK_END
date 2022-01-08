@@ -7,8 +7,7 @@ password VARCHAR(140) NOT NULL,
 login VARCHAR(20) NOT NULL,
 first_name VARCHAR(20) NOT NULL,
 last_name VARCHAR(20) NOT NULL,
-user_role roles,
-FOREIGN KEY(rate_id) REFERENCES ratings(id)
+user_role roles
 );
 
 CREATE TABLE movies(
@@ -26,7 +25,9 @@ popularity INT,
 poster_path TEXT NOT NULL,
 release_date VARCHAR(255),
 revenue BIGINT,
-runtime INT NOT NULL
+runtime INT NOT NULL,
+tagline VARCHAR(255),
+trailer VARCHAR(255)
 );
 
 CREATE TABLE genres(
