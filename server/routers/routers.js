@@ -1,12 +1,12 @@
-const { password } = require('pg/lib/defaults');
+
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
 const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLLERS } = require('../controllers');
 
-
 const routers = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
+
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
                 ({ error, data } = await SIGN_UP_CONTROLLER.postUserData(body));
@@ -29,12 +29,6 @@ const routers = async ({ req, res, body }) => {
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
                 ({ error, data } = await MOVIES.getMovieById(query.id));
                 break;
-            // case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
-            //     break;
-            // case (req.method === METHODS.PUT && pathname === `${ENDPOINTS.MOVIES}`):
-            //     break;
-            // case (req.method === METHODS.DELETE && pathname === `${ENDPOINTS.MOVIES}`):
-            //     break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
                 return res.end(JSON.stringify({ message: "Invalid request" }));

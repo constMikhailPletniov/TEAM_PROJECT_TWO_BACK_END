@@ -37,8 +37,6 @@ http.createServer(async (req, res) => {
         await routers({ req, res, body });
     });
 
-
-
 }).listen(CONFIG.PORT, () => {
     console.log(`App listen port: ${CONFIG.PORT}`);
 });
