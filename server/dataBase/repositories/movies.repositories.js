@@ -110,7 +110,6 @@ const getMovies = async ({ adult, page, perPage, budget, title, languages, genre
         }
         pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
         const movies = await client.query(pgQuery);
-        if (!movies.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
         return movies.rows;
     }
     catch (err) {

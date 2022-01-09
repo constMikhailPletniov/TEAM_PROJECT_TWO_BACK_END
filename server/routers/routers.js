@@ -1,3 +1,4 @@
+const { password } = require('pg/lib/defaults');
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
 const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLLERS } = require('../controllers');
@@ -6,6 +7,8 @@ const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLL
 const routers = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
+
+        const result_id = pathname.split('/').at(-1);
 
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
@@ -26,8 +29,8 @@ const routers = async ({ req, res, body }) => {
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
                 ({ error, data } = await MOVIES.getMovies(query));
                 break;
-            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
-                ({ error, data } = await MOVIES.getMovieById(query.id));
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/${result_id}`):
+                ({ error, data } = await MOVIES.getMovieById(result_id));
                 break;
             // case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
             //     break;
