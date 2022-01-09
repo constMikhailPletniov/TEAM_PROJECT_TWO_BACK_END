@@ -78,18 +78,23 @@ const getIdMovies = async () => {
     }
 };
 
-const getMovies = async ({ adult, page, perPage, budget, title, languages, genre_id,
+const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
     budget_min, budget_max }) => {
     const options = [];
     try {
         const validate = await REQUESTS_VALIDATE.queryValidate.validateAsync({ page, perPage });
 
         let pgQuery = `SELECT * FROM movies `;
+        if (genre_id) {
+            pgQuery = `SELECT * FROM movies LEFT JOIN
+    movies_genres ON movies.id = movie_id `;
+            options.push(`genre_id = ${genre_id}`);
+        }
         if (adult) options.push(`movies.adult = ${adult}`);
-        if (budget) options.push(`movies.budget > ${budget_min} AND budget < ${budget_max}`);
+        if (budget_min) options.push(`movies.budget > ${budget_min}`);
+        if (budget_max) options.push(`movies.budget < ${budget_max}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (languages) options.push(`movies.original_language = '${languages}'`);
-        if (genre_id) options.push(`genre_id = ${genre_id}`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
             options.length = 0;
