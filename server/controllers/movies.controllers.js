@@ -1,6 +1,7 @@
 const { STATUS_CODE } = require('../configurations');
 const { MOVIES_REPOSITORIES, GENRES_REPOSITORIES } = require('../dataBase/repositories');
 const { checkUserData } = require('./signIn');
+const { MOVIES_SERVICES } = require('../services');
 
 const setMoviesControll = async ({ login, password }) => {
     try {
@@ -16,11 +17,12 @@ const setMoviesControll = async ({ login, password }) => {
 };
 
 const getMovies = async (query) => {
-    // const table = [];
     try {
         const movies = await MOVIES_REPOSITORIES.getMovies(query);
         if (!movies[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
-        return { data: movies, status: 200 };
+
+        const table = await MOVIES_SERVICES.formatMovies(movies);
+        return { data: table, status: 200 };
     } catch (err) {
         console.error('getMovies: ', err);
         return { error: err };

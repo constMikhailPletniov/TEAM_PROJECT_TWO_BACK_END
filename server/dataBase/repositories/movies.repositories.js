@@ -2,6 +2,7 @@ const axios = require('axios');
 const client = require('../dataBases');
 const { STATUS_CODE } = require('../../configurations');
 const { REQUESTS_VALIDATE } = require('../../utils');
+const { MOVIES_SERVICES } = require('../../services');
 
 let count = 1;
 
@@ -77,28 +78,13 @@ const getIdMovies = async () => {
     }
 };
 
-const formatResult = (allMovies) => {
-    return allMovies.reduce((acc, item) => {
-        const check = acc.find((movie) => movie.id === item.movie_id);
-        const genresArr = [];
-        if (!check) {
-
-            acc.push({ genres: genresArr, ...item });
-        } else {
-            check.genres.push(item.genre_id);
-        }
-        return acc;
-    }, []);
-};
-
-
-
 const getMovies = async ({ adult, page, perPage, budget, title, languages, genre_id,
     budget_min, budget_max }) => {
     const options = [];
     try {
         const validate = await REQUESTS_VALIDATE.queryValidate.validateAsync({ page, perPage });
-        let pgQuery = `SELECT * FROM movies LEFT JOIN movies_genres ON movies_genres.movie_id = movies.id `;
+
+        let pgQuery = `SELECT * FROM movies `;
         if (adult) options.push(`movies.adult = ${adult}`);
         if (budget) options.push(`movies.budget > ${budget_min} AND budget < ${budget_max}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
@@ -110,8 +96,7 @@ const getMovies = async ({ adult, page, perPage, budget, title, languages, genre
         }
         pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
         const movies = await client.query(pgQuery);
-
-        return formatResult(movies.rows);
+        return movies.rows;
     }
     catch (err) {
         console.error('getMovies repo: ', err);
@@ -125,7 +110,7 @@ const getMovieById = async (movie_id) => {
         ON movie_id = movies.id WHERE movies.id = ${movie_id};`);
         if (!movie.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
 
-        return { data: formatResult(movie.rows) };
+        return { data: MOVIES_SERVICES.formatResult(movie.rows) };
     } catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };

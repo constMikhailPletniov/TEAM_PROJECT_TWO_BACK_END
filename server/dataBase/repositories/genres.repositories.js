@@ -20,7 +20,7 @@ const getGenres = async () => {
         if (!data.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
         return { data: data.rows };
     } catch (err) {
-        console.error(err)
+        console.error('getGenres: ', err)
         return { error: err };
     }
 };
@@ -33,7 +33,7 @@ const getGenresById = async (movie_id) => {
         const result = values.flat();
         return { data: result };
     } catch (err) {
-        console.error(err)
+        console.error('getGenresById: ', err)
         return { error: err };
     }
 };
