@@ -4,7 +4,7 @@ const client = new Client({
     host: 'localhost',
     port: 5432,
     user: 'postgres',
-    password: process.env.PG_PASSWORD || 'HSU1',
+    password: 'HSU1',
     database: 'filmsApi'
 });
 

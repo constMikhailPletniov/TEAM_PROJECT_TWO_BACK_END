@@ -7,7 +7,6 @@ const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLL
 const routers = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
-
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
                 ({ error, data } = await SIGN_UP_CONTROLLER.postUserData(body));
