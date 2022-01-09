@@ -8,8 +8,6 @@ const routers = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
 
-        const result_id = pathname.split('/').at(-1);
-
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
                 ({ error, data } = await SIGN_UP_CONTROLLER.postUserData(body));
@@ -29,8 +27,8 @@ const routers = async ({ req, res, body }) => {
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
                 ({ error, data } = await MOVIES.getMovies(query));
                 break;
-            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/${result_id}`):
-                ({ error, data } = await MOVIES.getMovieById(result_id));
+            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
+                ({ error, data } = await MOVIES.getMovieById(query.id));
                 break;
             // case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
             //     break;

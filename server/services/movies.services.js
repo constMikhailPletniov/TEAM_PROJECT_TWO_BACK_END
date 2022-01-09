@@ -30,21 +30,6 @@ const formatMovies = async (movies) => {
     return table;
 };
 
-const formatResult = (allMovies) => {
-    return allMovies.reduce((acc, item) => {
-        const check = acc.find((movie) => movie.id === item.movie_id);
-        const genresArr = [];
-        if (!check) {
-
-            acc.push({ genres: genresArr, ...item });
-        } else {
-            check.genres.push(item.genre_id);
-        }
-        return acc;
-    }, []);
-};
-
 module.exports = {
-    formatMovies,
-    formatResult
+    formatMovies
 }

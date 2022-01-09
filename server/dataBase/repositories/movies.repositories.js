@@ -109,8 +109,7 @@ const getMovieById = async (movie_id) => {
         const movie = await client.query(`SELECT * FROM movies_genres INNER JOIN movies
         ON movie_id = movies.id WHERE movies.id = ${movie_id};`);
         if (!movie.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
-
-        return { data: MOVIES_SERVICES.formatResult(movie.rows) };
+        return { data: await MOVIES_SERVICES.formatMovies(movie.rows) };
     } catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };
