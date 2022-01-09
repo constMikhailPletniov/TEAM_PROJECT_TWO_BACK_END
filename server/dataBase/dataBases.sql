@@ -9,6 +9,10 @@ first_name VARCHAR(20) NOT NULL,
 last_name VARCHAR(20) NOT NULL,
 user_role roles
 );
+CREATE TABLE genres(
+    id INT PRIMARY KEY NOT NULL,
+    name VARCHAR(100)
+);
 
 CREATE TABLE movies(
     id SERIAL PRIMARY KEY NOT NULL,
@@ -30,17 +34,13 @@ tagline VARCHAR(255),
 trailer VARCHAR(255)
 );
 
-CREATE TABLE genres(
-    id INT PRIMARY KEY NOT NULL,
-    name VARCHAR(100)
-);
-
 CREATE TABLE movies_genres(
  movie_id INT NOT NULL,
 genre_id INT NOT NULL,
     FOREIGN KEY(movie_id) REFERENCES movies(id),
     FOREIGN KEY(genre_id) REFERENCES genres(id)
 );
+
 CREATE TABLE ratings(
  id SERIAL PRIMARY KEY NOT NULL,
  rate INT NOT NULL,

@@ -1,10 +1,13 @@
 const axios = require('axios');
 const { GENRES_REPOSITORIES } = require('../dataBase/repositories');
 const { STATUS_CODE } = require('../configurations');
+const { checkUserData } = require('./signIn');
 
-const setGenres = async ({ user_role, api_key }) => {
+const setGenres = async ({ login, password, api_key }) => {
     try {
-        if (!user_role === 'admin') return { error: "Invalid admin" };
+        const { data: { checkUserRole } } = await checkUserData({ login, password });
+        if (checkUserRole !== 'admin') return { error: "Invalid admin" };
+
         const { data: { genres } } = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`);
 
         for (const item of genres) {

@@ -29,9 +29,6 @@ const routers = async ({ req, res, body }) => {
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
                 ({ error, data } = await MOVIES.getMovieById(query.id));
                 break;
-            case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}${ENDPOINTS.GENRES}/${query.id}`):
-                ({ error, data } = await MOVIES.getMoviesByGenresId(query.id));
-                break;
             // case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}`):
             //     break;
             // case (req.method === METHODS.PUT && pathname === `${ENDPOINTS.MOVIES}`):

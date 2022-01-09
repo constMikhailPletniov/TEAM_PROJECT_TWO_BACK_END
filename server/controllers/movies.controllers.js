@@ -1,9 +1,12 @@
 const { STATUS_CODE } = require('../configurations');
 const { MOVIES_REPOSITORIES, GENRES_REPOSITORIES } = require('../dataBase/repositories');
+const { checkUserData } = require('./signIn');
 
-const setMoviesControll = async ({ user_role }) => {
+const setMoviesControll = async ({ login, password }) => {
     try {
-        if (!user_role === 'admin') return { error: "Invalid admin" };
+        const { data: { checkUserRole } } = await checkUserData({ login, password });
+
+        if (checkUserRole !== 'admin') return { error: "Invalid admin" };
         await MOVIES_REPOSITORIES.getIdMovies();
         return { data: "Movies was set" };
     } catch (err) {
@@ -63,20 +66,8 @@ const getMovieById = async (movie_id) => {
     }
 };
 
-const getMoviesByGenresId = async (id) => {
-    try {
-        const { data } = await MOVIES_REPOSITORIES.getMoviesByGenresId(id);
-        console.log(data);
-        return { data: data };
-    } catch (err) {
-        console.error('getMoviesByGenresId contrl: ', err);
-        return { error: err };
-    }
-};
-
 module.exports = {
     setMoviesControll,
     getMovies,
-    getMovieById,
-    getMoviesByGenresId
+    getMovieById
 }

@@ -28,6 +28,11 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 
 };
 
+const changeReplace = (element) => {
+    element = element.replace(/'/gi, '\'\'');
+    return element;
+};
+
 const setMovies = async ({ id }) => {
     try {
 
@@ -36,11 +41,12 @@ const setMovies = async ({ id }) => {
         const idResult = await client.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
         if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
         const { data } = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=483f32e50b323d6e44691437daeb45e7`);
+        if (!data.results[0]) return;
         const trailer = data.results[0].key;
-        tagline = tagline.replace(/'/gi, '\'\'');
-        original_title = original_title.replace(/'/gi, '\'\'');
-        title = title.replace(/'/gi, '\'\'');
-        overview = overview.replace(/'/gi, '\'\'');
+        tagline = changeReplace(tagline);
+        original_title = changeReplace(original_title);
+        title = changeReplace(title);
+        overview = changeReplace(overview);
         const result = await client.query(`INSERT INTO movies(adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, title, overview, popularity, poster_path, release_date, revenue, runtime,tagline, trailer)
         VALUES(${adult},'${backdrop_path}',${budget},'${homepage}','${imdb_id}','${original_language}','${original_title}', '${title}','${overview}',${popularity},'${poster_path}','${release_date}',${revenue},${runtime},'${tagline}','${trailer}') returning*;`);
 
@@ -87,22 +93,22 @@ const formatResult = (allMovies) => {
 
 
 
-const getMovies = async ({ adult, page, perPage, budget, title, languages,
-    budget_min, budget_max, release_date_first, release_date_last, }) => {
+const getMovies = async ({ adult, page, perPage, budget, title, languages, genre_id,
+    budget_min, budget_max }) => {
     const options = [];
     try {
         const validate = await REQUESTS_VALIDATE.queryValidate.validateAsync({ page, perPage });
-        let pgQuery = `SELECT *  FROM movies `;
-        if (adult) options.push(`adult = ${adult}`);
-        if (budget) options.push(`budget > ${budget_min} AND budget < ${budget_max}`);
-        if (title) options.push(`title ILIKE '%${title}%'`);
-        if (languages) options.push(`original_language = '${languages}'`);
+        let pgQuery = `SELECT * FROM movies LEFT JOIN movies_genres ON movies_genres.movie_id = movies.id `;
+        if (adult) options.push(`movies.adult = ${adult}`);
+        if (budget) options.push(`movies.budget > ${budget_min} AND budget < ${budget_max}`);
+        if (title) options.push(`movies.title ILIKE '%${title}%'`);
+        if (languages) options.push(`movies.original_language = '${languages}'`);
+        if (genre_id) options.push(`genre_id = ${genre_id}`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
             options.length = 0;
         }
         pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
-        console.log(pgQuery);
         const movies = await client.query(pgQuery);
         if (!movies.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
         return movies.rows;
@@ -126,20 +132,10 @@ const getMovieById = async (movie_id) => {
     }
 };
 
-const getMoviesByGenresId = async (genre_id) => {
-    try {
-        const result = await client.query(`SELECT * FROM movies LEFT JOIN movies_genres ON movies_genres.movie_id = movies.id where genre_id = ${genre_id};`);
-        return { data: result.rows };
-    } catch (err) {
-        console.error('getMoviesByGenresId: ', err);
-        return { error: err };
-    }
-};
 
 module.exports = {
     getIdMovies,
     setMovies,
     getMovies,
-    getMovieById,
-    getMoviesByGenresId
+    getMovieById
 }
