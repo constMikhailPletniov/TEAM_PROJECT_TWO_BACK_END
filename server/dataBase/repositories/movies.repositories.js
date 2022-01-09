@@ -110,7 +110,8 @@ const getMovies = async ({ adult, page, perPage, budget, title, languages, genre
         }
         pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
         const movies = await client.query(pgQuery);
-        return movies.rows;
+
+        return formatResult(movies.rows);
     }
     catch (err) {
         console.error('getMovies repo: ', err);

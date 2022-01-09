@@ -16,38 +16,11 @@ const setMoviesControll = async ({ login, password }) => {
 };
 
 const getMovies = async (query) => {
-    const table = [];
+    // const table = [];
     try {
         const movies = await MOVIES_REPOSITORIES.getMovies(query);
         if (!movies[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
-
-        for (let element of movies) {
-            let id = element.id
-            const { error: dbError, data: result } = await GENRES_REPOSITORIES.getGenresById(id);
-            if (dbError) return { error: { status: 500, data: { error } } };
-            const row = {
-                id: element.id,
-                adult: element.adult,
-                backdrop_path: element.backdrop_path,
-                budget: element.budget,
-                homepage: element.homepage,
-                imdb_id: element.imdb_id,
-                original_language: element.original_language,
-                original_title: element.original_title,
-                title: element.title,
-                overview: element.overview,
-                popularity: element.popularity,
-                poster_path: element.poster_path,
-                release_date: element.release_date,
-                revenue: element.revenue,
-                runtime: element.runtime,
-                tagline: element.tagline,
-                trailer: element.trailer,
-                genres: result
-            }
-            table.push(row);
-        }
-        return { data: table, status: 200 };
+        return { data: movies, status: 200 };
     } catch (err) {
         console.error('getMovies: ', err);
         return { error: err };
