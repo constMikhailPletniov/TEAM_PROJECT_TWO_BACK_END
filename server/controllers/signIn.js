@@ -7,7 +7,10 @@ const checkUserData = async ({ login, password }) => {
 
         if (result.rows.length === 0) return { error: "Login not found" };
 
-        await PASSWORD_SERVICES.compare(password, result.rows[0].password);
+       const { error } = await PASSWORD_SERVICES.compare(password, result.rows[0].password);
+       if(error){
+           return { error };
+       }
         const checkUserRole = result.rows[0].user_role;
         const {
             accessToken,
