@@ -1,3 +1,4 @@
+const { STATUS_CODE } = require('../configurations');
 const client = require('../dataBase/dataBase');
 const { passwordServices, jwtServices } = require('../services');
 
@@ -5,7 +6,7 @@ const checkUserData = async ({ login, password }) => {
     try {
         const result = await client.query(`SELECT login, password, user_role FROM users WHERE login ='${login}'`);
 
-        if (!result.rows.length) return { error: "Login not found" };
+        if (!result.rows.length) return { error: { message: "Login not found", statusCode: STATUS_CODE.NOT_FOUND } };
 
         const { error } = await passwordServices.compare(password, result.rows[0].password);
         if (error) {
@@ -17,8 +18,7 @@ const checkUserData = async ({ login, password }) => {
         } = jwtServices.generateTokens();
         return {
             data: {
-                accessToken,
-                checkUserRole
+                data: 'Succsess', statusCode: STATUS_CODE.OK, accessToken, checkUserRole
             }
         };
 

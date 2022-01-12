@@ -1,21 +1,23 @@
 const axios = require('axios');
 const { genresRepositories } = require('../dataBase/repositories');
 const { STATUS_CODE } = require('../configurations');
-const { checkUserData } = require('./signIn');
+const { checkUserData } = require('./signIn.controllers');
+const { jwtServices } = require('../services');
 
-const setGenres = async ({ login, password, api_key }) => {
+const setGenres = async ({ login, password, api_key }, token) => {
     try {
+        const { error: tokenError } = jwtServices.verifyTokens(token);
+        if (tokenError) return { error: { message: tokenError, statusCode: STATUS_CODE.UNAUTHORIZED } };
         const { data: { checkUserRole } } = await checkUserData({ login, password });
-        if (checkUserRole !== 'admin') return { error: "Invalid admin" };
+        if (checkUserRole !== 'admin') return { error: { message: "Invalid admin", statusCode: STATUS_CODE.FORBIDDEN } };
 
         const { data: { genres } } = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`);
 
         for (const item of genres) {
             await genresRepositories.setGenres(item);
         }
-        return { data: "Genres was set" };
+        return { data: { data: "Genres was set", statusCode: STATUS_CODE.CREATED } };
     } catch (err) {
-        console.error('getGenres: ', err);
         return { error: err };
     }
 

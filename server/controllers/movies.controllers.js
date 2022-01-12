@@ -1,7 +1,7 @@
 const { STATUS_CODE } = require('../configurations');
-const { moviesRepositories, genresRepositories } = require('../dataBase/repositories');
-const { checkUserData } = require('./signIn');
-const { moviesServices } = require('../services');
+const { moviesRepositories } = require('../dataBase/repositories');
+const { checkUserData } = require('./signIn.controllers');
+const { moviesServices, jwtServices } = require('../services');
 
 const setMovies = async ({ login, password }) => {
     try {
@@ -18,11 +18,13 @@ const setMovies = async ({ login, password }) => {
 
 const getMovies = async (query) => {
     try {
-        const movies = await moviesRepositories.getMovies(query);
-        if (!movies[0]) return { data: 'Not page found', status: STATUS_CODE.NOT_FOUND };
+        const { error: tokenError } = jwtServices.verifyTokens(query.token);
+        if (tokenError) return { error: { message: tokenError, statusCode: STATUS_CODE.UNAUTHORIZED } };
+        const { result } = await moviesRepositories.getMovies(query);
+        if (!result.data[0]) return { error: { error: 'Not page found', statusCode: STATUS_CODE.NOT_FOUND } };
+        const table = await moviesServices.formatMovies(result);
 
-        const table = await moviesServices.formatMovies(movies);
-        return { data: table, status: 200 };
+        return { data: { data: { data: table, totalCount: result.totalCount }, statusCode: STATUS_CODE.OK } };
     } catch (err) {
         console.error('getMovies: ', err);
         return { error: err };

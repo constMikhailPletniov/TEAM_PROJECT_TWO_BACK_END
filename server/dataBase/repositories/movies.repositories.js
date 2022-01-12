@@ -1,6 +1,6 @@
 const axios = require('axios');
 const client = require('../dataBase');
-const { STATUS_CODE } = require('../../configurations');
+const { STATUS_CODE, CONSTANTS } = require('../../configurations');
 const { requestValidate } = require('../../utils');
 const { moviesServices } = require('../../services');
 
@@ -83,11 +83,11 @@ const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
     const options = [];
     try {
         const validate = await requestValidate.queryValidate.validateAsync({ page, perPage });
-
-        let pgQuery = `SELECT * FROM movies `;
+        let pgQuery = CONSTANTS.SELECT_QUERY_WITHOUT_GENRES;
+        let totalCountQuery = CONSTANTS.SELECT_QUERY_WITHOUT_GENRES_TOTALCOUNT;
         if (genre_id) {
-            pgQuery = `SELECT * FROM movies LEFT JOIN
-    movies_genres ON movies.id = movie_id `;
+            pgQuery = CONSTANTS.SELECT_QUERY_WITH_GENRES;
+            totalCountQuery = CONSTANTS.SELECT_QUERY_WITH_GENRES_TOTALCOUNT;
             options.push(`genre_id = ${genre_id}`);
         }
         if (adult) options.push(`movies.adult = ${adult}`);
@@ -97,11 +97,15 @@ const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
         if (languages) options.push(`movies.original_language = '${languages}'`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
+            totalCountQuery += `WHERE ${options.join(' AND ')} `;
             options.length = 0;
         }
         pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
+        totalCountQuery = totalCountQuery.trim();
+        totalCountQuery += `;`;
         const movies = await client.query(pgQuery);
-        return movies.rows;
+        const totalCount = await client.query(totalCountQuery);
+        return { result: { data: movies.rows, totalCount: totalCount.rows[0].count } };
     }
     catch (err) {
         console.error('getMovies repo: ', err);

@@ -15,6 +15,13 @@ CREATE TABLE genres(
     name VARCHAR(100)
 );
 
+CREATE TABLE languages(
+    id INT PRIMARY KEY NOT NULL,
+   iso_639_1 VARCHAR(5),
+english_name VARCHAR(30),
+name VARCHAR(50)
+);
+
 CREATE TABLE movies(
     id SERIAL PRIMARY KEY NOT NULL,
     adult BOOLEAN,
@@ -42,9 +49,4 @@ genre_id INT NOT NULL,
     FOREIGN KEY(genre_id) REFERENCES genres(id)
 );
 
-CREATE TABLE ratings(
- id SERIAL PRIMARY KEY NOT NULL,
- rate INT NOT NULL,
-  FOREIGN KEY(users_id) REFERENCES users(id),
- FOREIGN KEY(movie_id) REFERENCES movies(id)
-);
+

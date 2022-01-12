@@ -1,6 +1,6 @@
 module.exports = {
-    signUpController: require('./signUp'),
-    signInController: require('./signIn'),
+    signUpController: require('./signUp.controllers'),
+    signInController: require('./signIn.controllers'),
     moviesControllers: require('./movies.controllers'),
     genresControllers: require('./genres.controlles'),
     filtersControllers: require('./filters.controllers'),

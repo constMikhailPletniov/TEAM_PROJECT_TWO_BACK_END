@@ -1,7 +1,8 @@
-
+const { setMessageError } = require('../helpers/errors.helpers');
 const { userValidate } = require('../utils');
 const { usersRepositories } = require('../dataBase/repositories');
 const { passwordServices } = require('../services');
+const { STATUS_CODE } = require('../configurations');
 
 const signUp = async (body) => {
     try {
@@ -11,13 +12,14 @@ const signUp = async (body) => {
         }
         const { password, login, first_name, last_name, user_role } = value;
         const hashPassword = await passwordServices.hash(password);
-        const data = await usersRepositories.postUserData({ hashPassword, login, first_name, last_name, user_role });
-        return { data: data };
-
+        const { error: dbError, result } = await usersRepositories.postUserData({ hashPassword, login, first_name, last_name, user_role });
+        if (dbError) {
+            const errorNew = setMessageError(dbError);
+            return { error: { message: errorNew, statusCode: STATUS_CODE.BAD_REQUEST } };
+        }
+        return { data: { data: result, statusCode: STATUS_CODE.CREATED } };
     } catch (err) {
-        console.error('postUserData_Sing_up: ', err);
-
-        return { error: err.details[0].message };
+        return { error: err };
     }
 };
 

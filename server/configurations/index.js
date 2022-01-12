@@ -2,5 +2,6 @@ module.exports = {
     CONFIG: require('./config'),
     STATUS_CODE: require('./status_code'),
     METHODS: require('./methods'),
-    ENDPOINTS: require('./endpoints')
+    ENDPOINTS: require('./endpoints'),
+    CONSTANTS: require('./constants')
 }
