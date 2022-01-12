@@ -1,16 +1,18 @@
 
+const { userValidate } = require('../utils');
+const { usersRepositories } = require('../dataBase/repositories');
+const { passwordServices } = require('../services');
 
-const { USER_VALIDATE } = require('../utils');
-const { USERS_REPOSITORIES } = require('../dataBase/repositories');
-const { PASSWORD_SERVICES } = require('../services');
-
-const postUserData = async (body) => {
+const signUp = async (body) => {
     try {
-        const validate = USER_VALIDATE.userValidate.validate(body);
-        const { password, login, first_name, last_name, user_role } = validate;
-        const hashPassword = await PASSWORD_SERVICES.hash(password);
-        const data = await USERS_REPOSITORIES.postUserData({ hashPassword, login, first_name, last_name, user_role });
-        return { data: data.command };
+        const { error, value } = userValidate.userValidate.validate(body);
+        if (error) {
+            return { error: error.details[0].message }
+        }
+        const { password, login, first_name, last_name, user_role } = value;
+        const hashPassword = await passwordServices.hash(password);
+        const data = await usersRepositories.postUserData({ hashPassword, login, first_name, last_name, user_role });
+        return { data: data };
 
     } catch (err) {
         console.error('postUserData_Sing_up: ', err);
@@ -20,7 +22,7 @@ const postUserData = async (body) => {
 };
 
 module.exports = {
-    postUserData
+    signUp
 }
 
 

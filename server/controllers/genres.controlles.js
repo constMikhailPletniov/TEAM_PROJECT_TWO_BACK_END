@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { GENRES_REPOSITORIES } = require('../dataBase/repositories');
+const { genresRepositories } = require('../dataBase/repositories');
 const { STATUS_CODE } = require('../configurations');
 const { checkUserData } = require('./signIn');
 
@@ -11,7 +11,7 @@ const setGenres = async ({ login, password, api_key }) => {
         const { data: { genres } } = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`);
 
         for (const item of genres) {
-            await GENRES_REPOSITORIES.setGenres(item);
+            await genresRepositories.setGenres(item);
         }
         return { data: "Genres was set" };
     } catch (err) {
@@ -22,7 +22,7 @@ const setGenres = async ({ login, password, api_key }) => {
 };
 const getGenres = async () => {
     try {
-        const { data } = await GENRES_REPOSITORIES.getGenres();
+        const { data } = await genresRepositories.getGenres();
         if (!data) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
         return { data: data };
 

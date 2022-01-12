@@ -1,4 +1,4 @@
 module.exports = {
-    USER_VALIDATE: require('./users.validate'),
-    REQUESTS_VALIDATE: require('./request.validate')
+    userValidate: require('./users.validate'),
+    requestValidate: require('./request.validate')
 }

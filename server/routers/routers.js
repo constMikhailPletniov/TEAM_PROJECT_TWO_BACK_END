@@ -1,7 +1,7 @@
 
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
-const { SIGN_UP_CONTROLLER, SIGN_IN_CONTROLLER, MOVIES, GENRES, FILTERS_CONTROLLERS } = require('../controllers');
+const { signUpController, signInController, moviesControllers, genresControllers, filtersControllers } = require('../controllers');
 
 const routers = async ({ req, res, body }) => {
     try {
@@ -9,25 +9,25 @@ const routers = async ({ req, res, body }) => {
 
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
-                ({ error, data } = await SIGN_UP_CONTROLLER.postUserData(body));
+                ({ error, data } = await signUpController.signUp(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_IN}`):
-                ({ error, data } = await SIGN_IN_CONTROLLER.checkUserData(body));
+                ({ error, data } = await signInController.checkUserData(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}${ENDPOINTS.SET}`):
-                ({ error, data } = await MOVIES.setMoviesControll(body));
+                ({ error, data } = await moviesControllers.setMoviesControll(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.GENRES}${ENDPOINTS.SET}`):
-                ({ error, data } = await GENRES.setGenres(body));
+                ({ error, data } = await genresControllers.setGenres(body));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.FILTERS}`):
-                ({ error, data } = await FILTERS_CONTROLLERS.getfilters());
+                ({ error, data } = await filtersControllers.getfilters());
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
-                ({ error, data } = await MOVIES.getMovies(query));
+                ({ error, data } = await moviesControllers.getMovies(query));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
-                ({ error, data } = await MOVIES.getMovieById(query.id));
+                ({ error, data } = await moviesControllers.getMovieById(query.id));
                 break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
@@ -36,7 +36,8 @@ const routers = async ({ req, res, body }) => {
 
         if (error) {
             res.statusCode = STATUS_CODE.NOT_FOUND;
-            return res.end(JSON.stringify({ message: error }) || JSON.stringify({ message: error.message }));
+            return res.end(JSON.stringify({ message: { error: error, statusCode: STATUS_CODE.BAD_REQUEST } }) ||
+                JSON.stringify({ message: { error: error.message, statusCode: STATUS_CODE.BAD_REQUEST } }));
         }
         res.statusCode = STATUS_CODE.OK;
         return res.end(JSON.stringify({ message: data }));

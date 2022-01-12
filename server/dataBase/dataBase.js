@@ -4,8 +4,8 @@ const client = new Client({
     host: 'localhost',
     port: 5432,
     user: 'postgres',
-    password: '1Sparta1',
-    database: 'postgres'
+    password: 'HSU1',
+    database: 'filmsApi'
 });
 
 client.connect(err => {

@@ -1,14 +1,14 @@
 const { STATUS_CODE } = require('../configurations');
-const { MOVIES_REPOSITORIES, GENRES_REPOSITORIES } = require('../dataBase/repositories');
+const { moviesRepositories, genresRepositories } = require('../dataBase/repositories');
 const { checkUserData } = require('./signIn');
-const { MOVIES_SERVICES } = require('../services');
+const { moviesServices } = require('../services');
 
 const setMovies = async ({ login, password }) => {
     try {
         const { data: { checkUserRole } } = await checkUserData({ login, password });
 
         if (checkUserRole !== 'admin') return { error: "Invalid admin" };
-        await MOVIES_REPOSITORIES.getIdMovies();
+        await moviesRepositories.getIdMovies();
         return { data: "Movies was set" };
     } catch (err) {
         console.error('setMoviesControll: ', err);
@@ -18,10 +18,10 @@ const setMovies = async ({ login, password }) => {
 
 const getMovies = async (query) => {
     try {
-        const movies = await MOVIES_REPOSITORIES.getMovies(query);
-        if (!movies[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
+        const movies = await moviesRepositories.getMovies(query);
+        if (!movies[0]) return { data: 'Not page found', status: STATUS_CODE.NOT_FOUND };
 
-        const table = await MOVIES_SERVICES.formatMovies(movies);
+        const table = await moviesServices.formatMovies(movies);
         return { data: table, status: 200 };
     } catch (err) {
         console.error('getMovies: ', err);
@@ -31,7 +31,7 @@ const getMovies = async (query) => {
 
 const getMovieById = async (movie_id) => {
     try {
-        const { data } = await MOVIES_REPOSITORIES.getMovieById(movie_id);
+        const { data } = await moviesRepositories.getMovieById(movie_id);
         if (!data[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
 
         return { data: data };

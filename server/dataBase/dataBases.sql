@@ -7,7 +7,8 @@ password VARCHAR(140) NOT NULL,
 login VARCHAR(20) NOT NULL,
 first_name VARCHAR(20) NOT NULL,
 last_name VARCHAR(20) NOT NULL,
-user_role roles
+user_role roles,
+unique(login)
 );
 CREATE TABLE genres(
     id INT PRIMARY KEY NOT NULL,

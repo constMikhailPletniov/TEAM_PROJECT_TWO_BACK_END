@@ -1,8 +1,8 @@
 const axios = require('axios');
-const client = require('../dataBases');
+const client = require('../dataBase');
 const { STATUS_CODE } = require('../../configurations');
-const { REQUESTS_VALIDATE } = require('../../utils');
-const { MOVIES_SERVICES } = require('../../services');
+const { requestValidate } = require('../../utils');
+const { moviesServices } = require('../../services');
 
 let count = 1;
 
@@ -82,7 +82,7 @@ const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
     budget_min, budget_max }) => {
     const options = [];
     try {
-        const validate = await REQUESTS_VALIDATE.queryValidate.validateAsync({ page, perPage });
+        const validate = await requestValidate.queryValidate.validateAsync({ page, perPage });
 
         let pgQuery = `SELECT * FROM movies `;
         if (genre_id) {
@@ -114,7 +114,7 @@ const getMovieById = async (movie_id) => {
         const movie = await client.query(`SELECT * FROM movies_genres INNER JOIN movies
         ON movie_id = movies.id WHERE movies.id = ${movie_id};`);
         if (!movie.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
-        return { data: await MOVIES_SERVICES.formatMovies(movie.rows) };
+        return { data: await moviesServices.formatMovies(movie.rows) };
     } catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };

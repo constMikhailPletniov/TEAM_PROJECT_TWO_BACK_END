@@ -4,7 +4,7 @@ const { routers } = require('./routers/routers');
 const { CONFIG, STATUS_CODE } = require('./configurations');
 
 require('dotenv').config();
-require('./dataBase/dataBases');
+require('./dataBase/dataBase');
 
 http.createServer(async (req, res) => {
 

@@ -1,5 +1,5 @@
-const client = require('../dataBase/dataBases');
-const { PASSWORD_SERVICES, JWT_SERVICES } = require('../services');
+const client = require('../dataBase/dataBase');
+const { passwordServices, jwtServices } = require('../services');
 
 const checkUserData = async ({ login, password }) => {
     try {
@@ -7,14 +7,14 @@ const checkUserData = async ({ login, password }) => {
 
         if (!result.rows.length) return { error: "Login not found" };
 
-       const { error } = await PASSWORD_SERVICES.compare(password, result.rows[0].password);
-       if(error){
-           return { error };
-       }
+        const { error } = await passwordServices.compare(password, result.rows[0].password);
+        if (error) {
+            return { error };
+        }
         const checkUserRole = result.rows[0].user_role;
         const {
             accessToken,
-        } = JWT_SERVICES.generateTokens();
+        } = jwtServices.generateTokens();
         return {
             data: {
                 accessToken,
