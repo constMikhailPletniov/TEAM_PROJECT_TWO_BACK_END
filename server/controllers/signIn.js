@@ -5,7 +5,7 @@ const checkUserData = async ({ login, password }) => {
     try {
         const result = await client.query(`SELECT login, password, user_role FROM users WHERE login ='${login}'`);
 
-        if (result.rows.length === 0) return { error: "Login not found" };
+        if (!result.rows.length) return { error: "Login not found" };
 
        const { error } = await PASSWORD_SERVICES.compare(password, result.rows[0].password);
        if(error){

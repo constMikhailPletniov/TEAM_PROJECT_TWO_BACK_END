@@ -5,13 +5,13 @@ const hash = (password) => bcrypt.hash(password, CONFIG.SALT);
 
 const compare = async (password, hashPassword) => {
     try {
-        const isMatched = await bcrypt.compare(password, hashPassword);
-        if (!isMatched) {
-            return {error: 'Invalid data'}
-        }
-return isMatched;
+        return await bcrypt.compare(password, hashPassword);
+        // if (!isMatched) {
+        //     return {error: 'Invalid data'}
+        // }
     } catch (err) {
         console.error('compare: ', err);
+        return false;
     }
 };
 

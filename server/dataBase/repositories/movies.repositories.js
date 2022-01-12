@@ -106,7 +106,7 @@ const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
     catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };
-    };
+    }
 }
 
 const getMovieById = async (movie_id) => {

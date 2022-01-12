@@ -3,7 +3,7 @@ const { MOVIES_REPOSITORIES, GENRES_REPOSITORIES } = require('../dataBase/reposi
 const { checkUserData } = require('./signIn');
 const { MOVIES_SERVICES } = require('../services');
 
-const setMoviesControll = async ({ login, password }) => {
+const setMovies = async ({ login, password }) => {
     try {
         const { data: { checkUserRole } } = await checkUserData({ login, password });
 
@@ -42,7 +42,7 @@ const getMovieById = async (movie_id) => {
 };
 
 module.exports = {
-    setMoviesControll,
+    setMovies,
     getMovies,
     getMovieById
 }
