@@ -6,5 +6,6 @@ module.exports = {
     SIGN_IN: '/sign_in',
     SET: '/set',
     GENRES: '/genres',
+    LANGUAGES: '/languages',
     FILTERS: '/filters'
 }

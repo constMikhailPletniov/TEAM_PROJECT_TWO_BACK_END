@@ -16,10 +16,9 @@ CREATE TABLE genres(
 );
 
 CREATE TABLE languages(
-    id INT PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
    iso_639_1 VARCHAR(5),
-english_name VARCHAR(30),
-name VARCHAR(50)
+english_name VARCHAR(30)
 );
 
 CREATE TABLE movies(

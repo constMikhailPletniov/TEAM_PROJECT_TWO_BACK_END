@@ -2,7 +2,7 @@
 const URL = require('url');
 const { STATUS_CODE, METHODS, ENDPOINTS } = require('../configurations');
 const { signUpController, signInController, moviesControllers,
-    genresControllers, filtersControllers } = require('../controllers');
+    genresControllers, filtersControllers, languagesControllers } = require('../controllers');
 
 const routers = async ({ req, res, body }) => {
     try {
@@ -20,10 +20,10 @@ const routers = async ({ req, res, body }) => {
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.GENRES}${ENDPOINTS.SET}`):
                 ({ error, data } = await genresControllers.setGenres(body, query.token));
-                //  console.log(data, error);
+                console.log(data, error);
                 break;
-            case (req.method === METHODS.POST && pathname === `${ENDPOINTS.FILTERS}${ENDPOINTS.SET}`):
-                ({ error, data } = await filtersControllers.setFilters());
+            case (req.method === METHODS.POST && pathname === `${ENDPOINTS.LANGUAGES}${ENDPOINTS.SET}`):
+                ({ error, data } = await languagesControllers.setLanguages(body, query.token));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.FILTERS}`):
                 ({ error, data } = await filtersControllers.getfilters());
