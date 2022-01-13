@@ -12,6 +12,7 @@ module.exports = {
         EIGHT: 8,
         NINE: 9,
         TEN: 10,
+        EIGHTEEN: 18,
         TWENTY_ONE: 21,
         FOURTY_TWO: 42
     }
