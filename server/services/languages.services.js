@@ -8,6 +8,7 @@ const getLanguages = async (api_key) => {
         return { data: languages, statusCode: STATUS_CODE.CREATED };
     } catch (err) {
         console.error('getLanguages: ', err);
+        return{error:{message:err, statusCode:STATUS_CODE.INTERNAL_SERVER_ERROR}};
     }
 };
 

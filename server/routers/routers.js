@@ -20,7 +20,7 @@ const routers = async ({ req, res, body }) => {
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.GENRES}${ENDPOINTS.SET}`):
                 ({ error, data } = await genresControllers.setGenres(body, query.token));
-                console.log(data, error);
+                //  console.log(data, error);
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.FILTERS}${ENDPOINTS.SET}`):
                 ({ error, data } = await filtersControllers.setFilters());
@@ -30,7 +30,6 @@ const routers = async ({ req, res, body }) => {
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
                 ({ error, data } = await moviesControllers.getMovies(query));
-                console.log(error);
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
                 ({ error, data } = await moviesControllers.getMovieById(query.id));

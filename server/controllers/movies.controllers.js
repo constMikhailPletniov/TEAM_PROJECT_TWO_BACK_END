@@ -23,7 +23,6 @@ const getMovies = async (query) => {
         const { result } = await moviesRepositories.getMovies(query);
         if (!result.data[0]) return { error: { error: 'Not page found', statusCode: STATUS_CODE.NOT_FOUND } };
         const table = await moviesServices.formatMovies(result);
-
         return { data: { data: { data: table, totalCount: result.totalCount }, statusCode: STATUS_CODE.OK } };
     } catch (err) {
         console.error('getMovies: ', err);

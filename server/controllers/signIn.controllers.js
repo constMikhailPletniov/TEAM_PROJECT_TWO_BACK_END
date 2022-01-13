@@ -1,30 +1,14 @@
 const { STATUS_CODE } = require('../configurations');
-const client = require('../dataBase/dataBase');
-const { passwordServices, jwtServices } = require('../services');
+const { signInServices } = require('../services');
 
 const checkUserData = async ({ login, password }) => {
     try {
-        const result = await client.query(`SELECT login, password, user_role FROM users WHERE login ='${login}'`);
-
-        if (!result.rows.length) return { error: { message: "Login not found", statusCode: STATUS_CODE.NOT_FOUND } };
-
-        const { error } = await passwordServices.compare(password, result.rows[0].password);
-        if (error) {
-            return { error };
-        }
-        const checkUserRole = result.rows[0].user_role;
-        const {
-            accessToken,
-        } = jwtServices.generateTokens();
-        return {
-            data: {
-                data: 'Succsess', statusCode: STATUS_CODE.OK, accessToken, checkUserRole
-            }
-        };
-
+        const { error, data: { accessToken } } = await signInServices.signIn(login, password);
+        if (error) return { error: { message: error, statusCode: STATUS_CODE.NOT_FOUND } }
+        return { data: { data: 'Succsess', accessToken, statusCode: STATUS_CODE.OK } }
     } catch (err) {
         console.error('checkUserData: ', err);
-        return { error: err };
+        return { error: { message: err, statusCode: STATUS_CODE.INTERNAL_SERVER_ERROR } };
     }
 };
 

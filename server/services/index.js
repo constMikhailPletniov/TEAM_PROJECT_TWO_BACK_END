@@ -4,5 +4,6 @@ module.exports = {
     moviesServices: require('./movies.services'),
     languagesServices: require('./languages.services'),
     adminServices: require('./admin.services'),
-    signUpServices: require('./signUp.services')
+    signUpServices: require('./signUp.services'),
+    signInServices: require('./signIn.services')
 }
