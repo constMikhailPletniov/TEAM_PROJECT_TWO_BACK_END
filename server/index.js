@@ -11,6 +11,7 @@ http.createServer(async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, HEAD, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Expose-Headers', 'token');
     res.setHeader('Content-Type', 'application/json, text/plain; charset=utf-8;');
     res.setHeader('Access-Control-Max-Age', '-1');
 
