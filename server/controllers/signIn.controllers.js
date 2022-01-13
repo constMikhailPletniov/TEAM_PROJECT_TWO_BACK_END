@@ -1,10 +1,13 @@
 const { STATUS_CODE } = require('../configurations');
 const { signInServices } = require('../services');
+const { userValidate } = require('../utils');
 
 const checkUserData = async ({ login, password }) => {
     try {
-        const { error, data: { accessToken } } = await signInServices.signIn(login, password);
-        if (error) return { error: { message: error, statusCode: STATUS_CODE.NOT_FOUND } }
+        const { error: validateError, value } = userValidate.userValidate.validate({ login, password });
+        if (validateError) return { error: { mesage: validateError, statusCode: STATUS_CODE.BAD_REQUEST } };
+        const { error, data: { accessToken } } = await signInServices.signIn(value.login, value.password);
+        if (error) return { error: { message: error, statusCode: STATUS_CODE.UNAUTHORIZED } }
         return { data: { data: 'Succsess', accessToken, statusCode: STATUS_CODE.OK } }
     } catch (err) {
         console.error('checkUserData: ', err);
