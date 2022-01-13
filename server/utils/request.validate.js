@@ -4,7 +4,7 @@ const { CONFIG } = require('../configurations');
 
 const queryValidate = Joi.object({
     page: Joi.number().positive().integer().min(CONFIG.NUMBERS.ONE)
-        .default(1),
+        .default(CONFIG.NUMBERS.ONE),
     perPage: Joi.number().positive().integer().min(CONFIG.NUMBERS.ONE)
         .default(CONFIG.NUMBERS.EIGHTEEN),
 });
