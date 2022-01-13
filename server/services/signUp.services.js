@@ -1,13 +1,17 @@
-const signUp = async () => {
+const { hash } = require('./password.services');
+const { postUserData } = require('../dataBase/repositories/users.repositories');
+
+const { setMessageError } = require('../helpers/errors.helpers');
+
+const signUp = async ({ password, login, first_name, last_name, user_role }) => {
     try {
-        const { password, login, first_name, last_name, user_role } = value;
-        const hashPassword = await passwordServices.hash(password);
-        const { error: dbError, result } = await usersRepositories.postUserData({ hashPassword, login, first_name, last_name, user_role });
+        const hashPassword = await hash(password);
+        const { error: dbError, result } = await postUserData({ hashPassword, login, first_name, last_name, user_role });
         if (dbError) {
             const errorNew = setMessageError(dbError);
-            return { error: { message: errorNew, statusCode: STATUS_CODE.BAD_REQUEST } };
+            return { error: errorNew };
         }
-        return { data: result, statusCode: STATUS_CODE.CREATED };
+        return { data: result };
     } catch (err) {
         return { error: err };
     }

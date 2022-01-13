@@ -3,5 +3,6 @@ module.exports = {
     jwtServices: require('./jwt.services'),
     moviesServices: require('./movies.services'),
     languagesServices: require('./languages.services'),
-    adminServices: require('./admin.services')
+    adminServices: require('./admin.services'),
+    signUpServices: require('./signUp.services')
 }

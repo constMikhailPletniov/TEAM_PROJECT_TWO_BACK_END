@@ -1,16 +1,19 @@
-const { setMessageError } = require('../helpers/errors.helpers');
+
 const { userValidate } = require('../utils');
-const { usersRepositories } = require('../dataBase/repositories');
-const { passwordServices } = require('../services');
+const { signUpServices } = require('../services');
 const { STATUS_CODE } = require('../configurations');
 
 const signUp = async (body) => {
     try {
-        const { error, value } = userValidate.userValidate.validate(body);
-        if (error) {
-            return { error: error.details[0].message }
-        }
 
+        const { error, value } = userValidate.userValidate.validate(body);
+
+        if (error) {
+            return { error: { message: error.details[0].message, statusCode: STATUS_CODE.BAD_REQUEST } }
+        }
+        const { data, error: signUpError } = await signUpServices.signUp(value);
+        if (error) return { error: { message: signUpError, statusCode: STATUS_CODE.BAD_REQUEST } };
+        return { data: { data, statusCode: STATUS_CODE.CREATED } };
     } catch (err) {
         return { error: err };
     }

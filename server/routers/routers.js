@@ -7,6 +7,7 @@ const { signUpController, signInController, moviesControllers,
 const routers = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
+
         switch (true) {
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.USERS}${ENDPOINTS.SIGN_UP}`):
                 ({ error, data } = await signUpController.signUp(body));
