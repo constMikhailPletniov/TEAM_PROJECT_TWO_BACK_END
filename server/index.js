@@ -6,7 +6,7 @@ const { CONFIG, STATUS_CODE } = require('./configurations');
 require('dotenv').config();
 require('./dataBase/dataBase');
 
-http.createServer(async (req, res) => {
+const server = http.createServer(async (req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, HEAD, OPTIONS');
@@ -41,3 +41,5 @@ http.createServer(async (req, res) => {
 }).listen(CONFIG.PORT, () => {
     console.log(`App listen port: ${CONFIG.PORT}`);
 });
+
+module.exports.server = server;

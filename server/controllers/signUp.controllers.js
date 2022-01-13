@@ -5,7 +5,7 @@ const { STATUS_CODE } = require('../configurations');
 
 const signUp = async (body) => {
     try {
-        const { error, value } = userValidate.userValidate.validate(body);
+        const { error, value } = userValidate.userValidateSignUp.validate(body);
         if (error) {
             return { error: { message: error.details[0].message, statusCode: STATUS_CODE.BAD_REQUEST } }
         }

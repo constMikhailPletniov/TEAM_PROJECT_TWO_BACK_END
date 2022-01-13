@@ -2,6 +2,7 @@ const { getGenres } = require('./genres.controlles');
 const { getLanguages } = require('./languages.controllers');
 const { STATUS_CODE } = require('../configurations');
 const { jwtServices } = require('../services');
+
 const getfilters = async (token) => {
     try {
         const { error: tokenError } = jwtServices.verifyTokens(token);

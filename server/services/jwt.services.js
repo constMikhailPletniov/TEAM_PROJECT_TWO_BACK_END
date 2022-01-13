@@ -56,7 +56,6 @@ const verifyTokens = (token, tokenType = 'access') => {
             ? "ACCESS_TOKEN_SECRET"
             : "REFRESH_TOKEN_SECRET";
         const verify = jwt.verify(token, secret);
-        console.log(verify);
         return { data: verify };
     } catch (err) {
         return { error: 'Invalid Token' }
