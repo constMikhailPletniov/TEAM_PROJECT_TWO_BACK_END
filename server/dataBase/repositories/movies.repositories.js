@@ -79,7 +79,7 @@ const getIdMovies = async () => {
 };
 
 const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
-    budget_min, budget_max }) => {
+    budget_min, budget_max, release_date_min, release_date_max }) => {
     const options = [];
     try {
         const validate = await requestValidate.queryValidate.validateAsync({ page, perPage });
@@ -95,6 +95,8 @@ const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
         if (budget_max) options.push(`movies.budget < ${budget_max}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (languages) options.push(`movies.original_language = '${languages}'`);
+        if (release_date_min && release_date_max) options.push(`movies.release_date BETWEEN '${new Date(release_date_min).toDateString()}' 
+        AND '${new Date(release_date_max).toDateString()}' `);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
             totalCountQuery += `WHERE ${options.join(' AND ')} `;
@@ -103,8 +105,10 @@ const getMovies = async ({ adult, page, perPage, title, languages, genre_id,
         pgQuery += `ORDER BY id OFFSET ${(validate.page - 1) * validate.perPage} LIMIT ${validate.perPage};`;
         totalCountQuery = totalCountQuery.trim();
         totalCountQuery += `;`;
+        console.log('query: ', pgQuery);
         const movies = await client.query(pgQuery);
         const totalCount = await client.query(totalCountQuery);
+        console.log('movies: ', movies.rows);
         return { result: { data: movies.rows, totalCount: totalCount.rows[0].count } };
     }
     catch (err) {

@@ -1,15 +1,17 @@
-const { STATUS_CODE } = require('../configurations');
+const { STATUS_CODE, CONSTANTS } = require('../configurations');
 const { moviesRepositories } = require('../dataBase/repositories');
 const { checkUserData } = require('./signIn.controllers');
 const { moviesServices, jwtServices } = require('../services');
 
-const setMovies = async ({ login, password }) => {
+const setMovies = async ({ login, password }, token) => {
     try {
-        const { data: { checkUserRole } } = await checkUserData({ login, password });
 
-        if (checkUserRole !== 'admin') return { error: "Invalid admin" };
+        const { error: tokenError } = jwtServices.verifyTokens(token);
+        if (tokenError) return { error: { message: tokenError, statusCode: STATUS_CODE.UNAUTHORIZED } };
+        const { data: { checkUserRole } } = await checkUserData({ login, password });
+        if (checkUserRole !== CONSTANTS.ADMIN) return { error: { message: "Invalid admin", statusCode: STATUS_CODE.UNAUTHORIZED } };
         await moviesRepositories.getIdMovies();
-        return { data: "Movies was set" };
+        return { data: { data: "Movies was set", statusCode: STATUS_CODE.CREATED } };
     } catch (err) {
         console.error('setMoviesControll: ', err);
         return { error: err };
@@ -31,9 +33,10 @@ const getMovies = async (query) => {
     }
 };
 
-const getMovieById = async (movie_id) => {
+const getMovieById = async ({ movie_id, token }) => {
     try {
-
+        const { error: tokenError } = jwtServices.verifyTokens(token);
+        if (tokenError) return { error: { message: tokenError, statusCode: STATUS_CODE.UNAUTHORIZED } };
         const { data } = await moviesRepositories.getMovieById(movie_id);
         if (!data[0]) return { error: { message: 'Not found', statusCode: STATUS_CODE.NOT_FOUND } };
         return { data: { data: data[0], statusCode: STATUS_CODE.OK } };

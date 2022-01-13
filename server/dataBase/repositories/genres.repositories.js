@@ -27,7 +27,6 @@ const getGenres = async () => {
 
 const getGenresById = async (movie_id) => {
     try {
-        console.log('movie_id: ', movie_id);
         const data = await client.query(`SELECT genre_id FROM movies_genres WHERE movie_id = ${movie_id};`);
         if (!data.rows[0]) return { error: { data: 'Not found', status: STATUS_CODE.NOT_FOUND } };
         return data.rows.map((elem) => elem.genre_id);

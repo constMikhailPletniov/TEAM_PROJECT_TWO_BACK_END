@@ -16,23 +16,23 @@ const routers = async ({ req, res, body }) => {
                 ({ error, data } = await signInController.checkUserData(body));
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.MOVIES}${ENDPOINTS.SET}`):
-                ({ error, data } = await moviesControllers.setMoviesControll(body));
+                ({ error, data } = await moviesControllers.setMovies(body, query.token));
+                console.log('data: ', data, 'error: ', error);
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.GENRES}${ENDPOINTS.SET}`):
                 ({ error, data } = await genresControllers.setGenres(body, query.token));
-                console.log(data, error);
                 break;
             case (req.method === METHODS.POST && pathname === `${ENDPOINTS.LANGUAGES}${ENDPOINTS.SET}`):
                 ({ error, data } = await languagesControllers.setLanguages(body, query.token));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.FILTERS}`):
-                ({ error, data } = await filtersControllers.getfilters());
+                ({ error, data } = await filtersControllers.getfilters(query.token));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}`):
                 ({ error, data } = await moviesControllers.getMovies(query));
                 break;
             case (req.method === METHODS.GET && pathname === `${ENDPOINTS.MOVIES}/id`):
-                ({ error, data } = await moviesControllers.getMovieById(query.id));
+                ({ error, data } = await moviesControllers.getMovieById(query));
                 break;
             default:
                 res.statusCode = STATUS_CODE.NOT_FOUND;
