@@ -22,7 +22,8 @@ const getMovies = async (query) => {
         if (tokenError) return { error: { message: tokenError, statusCode: STATUS_CODE.UNAUTHORIZED } };
         const { result } = await moviesRepositories.getMovies(query);
         if (!result.data[0]) return { error: { error: 'Not page found', statusCode: STATUS_CODE.NOT_FOUND } };
-        const table = await moviesServices.formatMovies(result);
+
+        const table = await moviesServices.formatMovies(result.data);
         return { data: { data: { data: table, totalCount: result.totalCount }, statusCode: STATUS_CODE.OK } };
     } catch (err) {
         console.error('getMovies: ', err);
@@ -32,10 +33,10 @@ const getMovies = async (query) => {
 
 const getMovieById = async (movie_id) => {
     try {
-        const { data } = await moviesRepositories.getMovieById(movie_id);
-        if (!data[0]) return { data: 'Not found', status: STATUS_CODE.NOT_FOUND };
 
-        return { data: data };
+        const { data } = await moviesRepositories.getMovieById(movie_id);
+        if (!data[0]) return { error: { message: 'Not found', statusCode: STATUS_CODE.NOT_FOUND } };
+        return { data: { data: data[0], statusCode: STATUS_CODE.OK } };
     } catch (err) {
         console.error('getMovieById: ', err);
         return { error: err };
